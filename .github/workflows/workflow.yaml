@@ -39,7 +39,7 @@ jobs:
     - name: Authenticate with GCP
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${GOOGLE_CREDENTIALS}
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
 
     - name: Run SQL script
