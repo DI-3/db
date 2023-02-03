@@ -1,0 +1,51 @@
+#Terraform typcal workflow includes - terraform init terraform validate terraform fmt terraform plan  terraform apply
+#
+#In my scenario, I want two things to happen:
+#
+#Plan: When a pull request is received, a GitHub Workflow is triggered to perform a security audit,
+#construct Google Cloud credentials, load the Terraform CLI, and perform an init , fmt and plan using the
+#proposed files in the pull request. Finally, I want a comment on the pull request to show the results of the plan step.
+#Apply: When a push is received in the master branch, I can assume that the proposal
+#was accepted and the new code should be applied.
+#I again wish to construct Google Cloud credentials and load the Terraform CLI.
+#However, the final steps will be to apply the configuration.
+
+name: Run SQL Script
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SQL_SCRIPT: DDL/database_schema.sql
+
+jobs:
+  run_sql:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up GCloud CLI
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: latest
+      
+    - name: Authenticate with GCP
+      uses: google-github-actions/authenticate-with-gcp@master
+      with:
+        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+        key: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+
+    - name: Run SQL script
+      run: |
+        gcloud sql instances describe [cloud-sql-instance] --format='value(connectionName)'
+        gcloud sql connect [cloud-sql-instance] --user=root
+        cat ${SQL_SCRIPT} | gcloud sql shell [cloud-sql-instance]
+        
+    - name: Cleanup
+      run: |
+        gcloud sql instances close-connection [cloud-sql-instance]
