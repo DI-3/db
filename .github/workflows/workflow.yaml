@@ -45,7 +45,7 @@ jobs:
     - name: Run SQL script
       run: |
         gcloud sql instances describe cloud-sql-instance --format='value(connectionName)'
-        gcloud sql connect cloud-sql-instance --user=root
+        gcloud sql connect cloud-sql-instance --user=postgres
         cat ${SQL_SCRIPT} | gcloud sql shell cloud-sql-instance
         
     - name: Cleanup
