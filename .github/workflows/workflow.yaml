@@ -19,6 +19,9 @@ on:
 
 env:
   SQL_SCRIPT: DDL/database_schema.sql
+  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  GOOGLE_SA_ACCOUNT: ${{secrets.GCP_SA_EMAIL}}
+
 
 jobs:
   run_sql:
@@ -35,8 +38,9 @@ jobs:
       
     - name: Authenticate with GCP
       uses: google-github-actions/auth@v1
-      env: 
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      with:
+        service_account_email: ${GOOGLE_SA_ACCOUNT}
+        key: ${GOOGLE_CREDENTIALS}
 
 
     - name: Run SQL script
