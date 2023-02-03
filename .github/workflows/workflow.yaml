@@ -34,7 +34,7 @@ jobs:
         version: latest
       
     - name: Authenticate with GCP
-      uses: google-github-actions/authenticate-with-gcp@main
+      uses: google-github-actions/auth@v1
       with:
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         key: ${{ secrets.GOOGLE_CREDENTIALS }}
