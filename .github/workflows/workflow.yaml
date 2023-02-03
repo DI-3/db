@@ -44,9 +44,13 @@ jobs:
 
     - name: Run SQL script
       run: |
-        gcloud sql instances describe cloud-sql-instance --format='value(connectionName)'
-        gcloud sql connect cloud-sql-instance --user=root --password=reunion
-        cat ${SQL_SCRIPT} | gcloud sql shell cloud-sql-instance
+        gcloud sql connect cloud-sql-instance \
+        --user=root --password=reunion
+        
+        gcloud sql databases execute \
+        --instance=cloud-sql-instance\
+        --sql-file={{ env.SQL_SCRIPT }}
+
         
     - name: Cleanup
       run: |
