@@ -35,9 +35,8 @@ jobs:
       
     - name: Authenticate with GCP
       uses: google-github-actions/auth@v1
-      with:
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        key: ${{ secrets.GOOGLE_CREDENTIALS }}
+      env: 
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
 
     - name: Run SQL script
