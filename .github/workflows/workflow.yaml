@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Set up GCloud CLI
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@main
       with:
         version: latest
       
