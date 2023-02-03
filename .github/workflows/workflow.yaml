@@ -44,8 +44,7 @@ jobs:
 
     - name: Run SQL script
       run: |
-        gcloud sql connect cloud-sql-instance \
-        --user=root --password=reunion
+        gcloud sql connect cloud-sql-instance 
         
         gcloud sql databases execute \
         --instance=cloud-sql-instance\
