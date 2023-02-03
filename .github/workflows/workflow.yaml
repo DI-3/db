@@ -44,10 +44,10 @@ jobs:
 
     - name: Run SQL script
       run: |
-        gcloud sql instances describe [cloud-sql-instance] --format='value(connectionName)'
-        gcloud sql connect [cloud-sql-instance] --user=root
-        cat ${SQL_SCRIPT} | gcloud sql shell [cloud-sql-instance]
+        gcloud sql instances describe [universal-valve-373803:cloud-sql-instance] --format='value(connectionName)'
+        gcloud sql connect [universal-valve-373803:cloud-sql-instance] --user=root
+        cat ${SQL_SCRIPT} | gcloud sql shell [universal-valve-373803:cloud-sql-instance]
         
     - name: Cleanup
       run: |
-        gcloud sql instances close-connection [cloud-sql-instance]
+        gcloud sql instances close-connection [universal-valve-373803:cloud-sql-instance]
