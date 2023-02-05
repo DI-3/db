@@ -1,7 +1,7 @@
 CREATE DATABASE reuniondb;
 
-CREATE TABLE users (
-    contact_id uuid DEFAULT uuid_generate_v4(),
+CREATE TABLE users1 (
+    contact_id uuid,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
