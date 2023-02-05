@@ -21,6 +21,7 @@ env:
   SQL_SCRIPT: DDL/database_schema.sql
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   GOOGLE_SA_ACCOUNT: ${{secrets.GCP_SA_EMAIL}}
+  DATABASE_PASSWORD: ${{ secrets.ROOT_PASSW }}
 
 
 jobs:
@@ -40,18 +41,15 @@ jobs:
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-
-
+ 
+    - name: SQL Cloud Proxy
+      run: |
+        wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy 
+        chmod +x cloud_sql_proxy
+    
     - name: Run SQL script
       run: |
-        gcloud sql connect cloud-sql-instance \
-        --user=root --password=${{ secrets.ROOT_PASSW }}
-        
-        gcloud sql databases execute \
-        --instance=cloud-sql-instance\
-        --sql-file={{ env.SQL_SCRIPT }}
+        ./cloud_sql_proxy -instances=universal-valve-373803:us-central1:cloud-sql-instance=tcp:127.0.0.1:5432 &
+        sleep 5
+        PGPASSWORD=$DATABASE_PASSWORD psql -h 127.0.0.1 -U root  -a -f ${{ env.SQL_SCRIPT }}
 
-        
-    - name: Cleanup
-      run: |
-        gcloud sql instances close-connection cloud-sql-instance
